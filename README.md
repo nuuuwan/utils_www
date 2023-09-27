@@ -1,4 +1,4 @@
-# utils_www (WWW)
+# Utils (WWW)
 
 Utilities for accessing webpages
 
