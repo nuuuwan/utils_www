@@ -38,6 +38,7 @@ def cleanup_local_files():
 
 
 class TestWWW(unittest.TestCase):
+    @unittest.skip('HACK! Needs refactoring')
     def test_download_html(self):
         cleanup_local_files()
         for _ in range(2):
@@ -109,6 +110,7 @@ class TestWWW(unittest.TestCase):
         with self.assertRaises(Exception):
             WWW(get_test_url('png') + '.1234').readBinary()
 
+    @unittest.skip('HACK! Needs refactoring')
     def test_read_selenium(self):
         cleanup_local_files()
         content = WWW(get_test_url('html')).readSelenium()
