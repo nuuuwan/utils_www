@@ -7,7 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
-from utils_base import CSVFile, File, JSONFile, Log, TSVFile, hashx
+from utils_base import CSVFile, File, Hash, JSONFile, Log, TSVFile
 
 log = Log('WWW')
 
@@ -40,7 +40,7 @@ class WWW:
 
     @property
     def hash_id(self):
-        return hashx.md5(self.url)[:HASH_LENGTH]
+        return Hash.md5(self.url)[:HASH_LENGTH]
 
     @property
     def ext(self):

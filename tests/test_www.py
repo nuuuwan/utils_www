@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from utils_base import CSVFile, File, JSONFile, TSVFile
+from utils_base import File
 
 from utils_www import WWW
 
@@ -38,22 +38,6 @@ def cleanup_local_files():
 
 
 class TestWWW(unittest.TestCase):
-    @unittest.skip('HACK! Needs refactoring')
-    def test_download_html(self):
-        cleanup_local_files()
-        for _ in range(2):
-            self.assertEqual(
-                strip_html(File(get_test_file('html')).read()),
-                strip_html(WWW(get_test_url('html')).read()),
-            )
-
-    def test_download_binary(self):
-        cleanup_local_files()
-        self.assertEqual(
-            File(get_test_file('png')).readBinary(),
-            WWW(get_test_url('png')).read(),
-        )
-
     def test_read(self):
         cleanup_local_files()
         self.assertEqual(
@@ -74,47 +58,3 @@ class TestWWW(unittest.TestCase):
         self.assertGreater(len(children), 0)
         print(children[0].url)
         self.assertIn(children[0].url, '#')
-
-    # ----------------------------
-    # To Deprecate
-    # ----------------------------
-
-    def test_read_json(self):
-        cleanup_local_files()
-        self.assertEqual(
-            JSONFile(get_test_file('json')).read(),
-            WWW(get_test_url('json')).readJSON(),
-        )
-
-    def test_read_tsv(self):
-        cleanup_local_files()
-        self.assertEqual(
-            TSVFile(get_test_file('tsv')).read(),
-            WWW(get_test_url('tsv')).readTSV(),
-        )
-
-    def test_read_csv(self):
-        cleanup_local_files()
-        self.assertEqual(
-            CSVFile(get_test_file('csv')).read(),
-            WWW(get_test_url('csv')).readCSV(),
-        )
-
-    def test_read_binary(self):
-        cleanup_local_files()
-        self.assertEqual(
-            File(get_test_file('png')).readBinary(),
-            WWW(get_test_url('png')).readBinary(),
-        )
-
-        with self.assertRaises(Exception):
-            WWW(get_test_url('png') + '.1234').readBinary()
-
-    @unittest.skip('HACK! Needs refactoring')
-    def test_read_selenium(self):
-        cleanup_local_files()
-        content = WWW(get_test_url('html')).readSelenium()
-        self.assertIn(
-            'This is a test',
-            content,
-        )
