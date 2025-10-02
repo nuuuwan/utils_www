@@ -3,7 +3,7 @@
 import setuptools
 
 DIST_NAME = 'utils_www'
-VERSION = "1.2.8"
+VERSION = "1.3.0"
 DESCRIPTION = "Utilities for accessing webpages"
 
 setuptools.setup(
