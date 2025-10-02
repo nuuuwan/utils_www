@@ -16,7 +16,6 @@ class TestCase(unittest.TestCase):
     TEST_URL_PYTHON_ORG = "https://www.python.org/"
 
     def test_init_and_basic_methods(self):
-
         www = WWW(self.TEST_URL_HTML)
         self.assertEqual(
             str(www),
