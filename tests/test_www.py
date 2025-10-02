@@ -14,6 +14,7 @@ class TestCase(unittest.TestCase):
         + "/nuuuwan/utils_www/refs/heads/main/tests/_input/data.png"
     )
     TEST_URL_PYTHON_ORG = "https://www.python.org/"
+    DIR_OUTPUT = os.path.join("tests", "_output")
 
     def test_init_and_basic_methods(self):
         www = WWW(self.TEST_URL_HTML)
@@ -53,7 +54,8 @@ class TestCase(unittest.TestCase):
 
     def test_download_binary(self):
         www = WWW(self.TEST_URL_PNG)
-        download_path = os.path.join("tests", "_output", "data.png")
+        os.makedirs(self.DIR_OUTPUT, exist_ok=True)
+        download_path = os.path.join(self.DIR_OUTPUT, "data.png")
         if os.path.exists(download_path):
             os.remove(download_path)
         www.download_binary(download_path)
