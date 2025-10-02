@@ -2,8 +2,8 @@
 
 import setuptools
 
-DIST_NAME = 'utils_www'
-VERSION = "1.3.0"
+DIST_NAME = "utils_www"
+VERSION = "1.3.1"
 DESCRIPTION = "Utilities for accessing webpages"
 
 setuptools.setup(
@@ -27,11 +27,11 @@ setuptools.setup(
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.10",
     install_requires=[
-        'bs4',
-        'requests',
-        'selenium',
-        'utils_base-nuuuwan',
+        "bs4",
+        "requests",
+        "selenium",
+        "utils_base-nuuuwan",
     ],
-    test_suite='nose.collector',
-    tests_require=['nose'],
+    test_suite="nose.collector",
+    tests_require=["nose"],
 )
