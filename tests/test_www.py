@@ -62,6 +62,6 @@ class TestCase(unittest.TestCase):
 
     def test_soup(self):
         www = WWW(self.TEST_URL_HTML)
-        soup = www.soup()
+        soup = www.soup
         h1 = soup.find("h1")
         self.assertEqual(h1.text, "Heading 1")
