@@ -17,21 +17,26 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 
 class WWW:
-    HEADERS = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-        + " AppleWebKit/537.36 "
-    }
-    T_TIMEOUT = 120
-    T_SELENIUM_WAIT = 5
+    class DEFAULT_PARAMS:
+        HEADERS = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            + " AppleWebKit/537.36 "
+        }
+        T_TIMEOUT = 120
+        T_SELENIUM_WAIT = 1
 
-    def __init__(self, url: str):
+    def __init__(
+        self, url: str, headers=None, t_timeout=None, t_selenium_wait=None
+    ):
         self.url = url
+        self.headers = headers or self.DEFAULT_PARAMS.HEADERS
+        self.t_timeout = t_timeout or self.DEFAULT_PARAMS.T_TIMEOUT
+        self.t_selenium_wait = (
+            t_selenium_wait or self.DEFAULT_PARAMS.T_SELENIUM_WAIT
+        )
 
     def __str__(self) -> str:
         return f"🌐{self.url}"
-
-    def __hash__(self):
-        return hash(self.url)
 
     @property
     def ext(self) -> str:
@@ -50,16 +55,16 @@ class WWW:
     def get_response(self):
         response = requests.get(
             self.url,
-            headers=self.HEADERS,
-            timeout=self.T_TIMEOUT,
+            headers=self.headers,
+            timeout=self.t_timeout,
             verify=False,
         )
         response.raise_for_status()
         return response
 
-    def __read_hot__(self):
+    def __read_hot__(self) -> str:
         response = self.get_response()
-        return response.content
+        return response.content.decode("utf-8")
 
     def read(self):
         temp_file = File(self.temp_local_path)
@@ -74,7 +79,7 @@ class WWW:
         options.add_argument("-headless")
         driver = webdriver.Firefox(options=options)
         driver.get(self.url)
-        time.sleep(self.T_SELENIUM_WAIT)
+        time.sleep(self.t_selenium_wait)
         content = driver.page_source
         driver.quit()
         return content
