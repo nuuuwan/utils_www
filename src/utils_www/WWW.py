@@ -4,6 +4,7 @@ import tempfile
 import time
 
 import requests
+import urllib3
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
@@ -14,6 +15,7 @@ log = Log("WWW")
 
 # pylint: disable=W0212
 ssl._create_default_https_context = ssl._create_unverified_context
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class WWW:
