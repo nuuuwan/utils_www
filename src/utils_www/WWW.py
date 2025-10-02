@@ -1,4 +1,5 @@
 """utils_www for reading remote files."""
+
 import os
 import ssl
 import tempfile
@@ -75,10 +76,9 @@ class WWW:
         File(self.local_path).write(html)
         return self.local_path
 
-    @staticmethod
-    def download_binary(url, file_path):
+    def download_binary(self, file_path):
         CHUNK_SIZE = 1024
-        r = requests.get(url, stream=True)
+        r = requests.get(self.url, stream=True)
         with open(file_path, 'wb') as fd:
             for chunk in r.iter_content(CHUNK_SIZE):
                 fd.write(chunk)
@@ -94,7 +94,7 @@ class WWW:
 
         if self.ext in HTML_EXT_LIST:
             return self.download_html()
-        return WWW.download_binary(self.url, self.local_path)
+        return WWW(self.url).download_binary(self.local_path)
 
     def read(self):
         self.download()
