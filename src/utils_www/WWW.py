@@ -19,6 +19,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class WWW:
+    class WWWTimeoutError(Exception):
+        pass
+
     class DEFAULT_PARAMS:
         HEADERS = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
@@ -55,14 +58,26 @@ class WWW:
         return os.path.join(dir_www, f"www.{self.url_md5}.{self.ext}")
 
     def get_response(self):
-        response = requests.get(
-            self.url,
-            headers=self.headers,
-            timeout=self.t_timeout,
-            verify=False,
-        )
-        response.raise_for_status()
-        return response
+        t_start = time.perf_counter()
+        t_sleep = 0.1
+        while True:
+            try:
+                response = requests.get(
+                    self.url,
+                    headers=self.headers,
+                    timeout=self.t_timeout,
+                    verify=False,
+                )
+                response.raise_for_status()
+                return response
+            except Exception as e:
+                log.error(f"Error fetching {self.url}: {e}")
+                dt = time.perf_counter() - t_start
+                if dt > self.t_timeout:
+                    raise WWW.WWWTimeoutError(f"Timeout fetching {self.url}")
+
+                time.sleep(t_sleep)
+                t_sleep *= 2
 
     def __read_hot__(self) -> str:
         response = self.get_response()

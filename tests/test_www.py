@@ -47,6 +47,11 @@ class TestCase(unittest.TestCase):
         content2 = www.read()
         self.assertEqual(content, content2)
 
+    def test_read_timeout(self):
+        www = WWW("http://www.example.com/fake", t_timeout=1)
+        with self.assertRaises(WWW.WWWTimeoutError):
+            www.read()
+
     def test_read_with_selenium(self):
         www = WWW(self.TEST_URL_PYTHON_ORG)
         content = www.read_with_selenium()
