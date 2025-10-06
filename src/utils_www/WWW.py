@@ -76,7 +76,10 @@ class WWW:
                 response.raise_for_status()
                 return response
             except Exception as e:
-                message = f"[{i_retry + 1}/{self.max_retries} attempts] {self.url}: {e}."
+                message = (
+                    f"[{i_retry + 1}/{self.max_retries} attempts]"
+                    + f" {self.url}: {e}."
+                )
                 if i_retry + 1 == self.max_retries:
                     log.error(message + " Max retries reached. Aborting 🛑.")
                     raise e
