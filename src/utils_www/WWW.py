@@ -19,8 +19,6 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class WWW:
-    class WWWTimeoutError(Exception):
-        pass
 
     class DEFAULT_PARAMS:
         HEADERS = {
@@ -29,9 +27,15 @@ class WWW:
         }
         T_TIMEOUT = 120
         T_SELENIUM_WAIT = 1
+        MAX_RETRIES = 5
 
     def __init__(
-        self, url: str, headers=None, t_timeout=None, t_selenium_wait=None
+        self,
+        url: str,
+        headers=None,
+        t_timeout=None,
+        t_selenium_wait=None,
+        max_retries=None,
     ):
         self.url = url
         self.headers = headers or self.DEFAULT_PARAMS.HEADERS
@@ -39,6 +43,7 @@ class WWW:
         self.t_selenium_wait = (
             t_selenium_wait or self.DEFAULT_PARAMS.T_SELENIUM_WAIT
         )
+        self.max_retries = max_retries or self.DEFAULT_PARAMS.MAX_RETRIES
 
     def __str__(self) -> str:
         return f"🌐{self.url}"
@@ -58,9 +63,9 @@ class WWW:
         return os.path.join(dir_www, f"www.{self.url_md5}.{self.ext}")
 
     def get_response(self):
-        t_start = time.perf_counter()
-        t_sleep = 0.1
-        while True:
+        i_retry = 0
+        t_sleep = 0.5
+        for i_retry in range(self.max_retries):
             try:
                 response = requests.get(
                     self.url,
@@ -71,11 +76,11 @@ class WWW:
                 response.raise_for_status()
                 return response
             except Exception as e:
-                log.error(f"Error fetching {self.url}: {e}")
-                dt = time.perf_counter() - t_start
-                if dt > self.t_timeout:
-                    raise WWW.WWWTimeoutError(f"Timeout fetching {self.url}")
-
+                message = f"[{i_retry + 1}/{self.max_retries} attempts] {self.url}: {e}."
+                if i_retry + 1 == self.max_retries:
+                    log.error(message + " Max retries reached. Aborting 🛑.")
+                    raise e
+                log.warning(message + f" Retrying in {t_sleep:.2f}s...")
                 time.sleep(t_sleep)
                 t_sleep *= 2
 
