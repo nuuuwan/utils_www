@@ -83,7 +83,7 @@ class WWW:
         response = self.get_response()
         return response.content.decode("utf-8")
 
-    def read(self):
+    def read_static(self):
         temp_file = File(self.temp_local_path)
         if temp_file.exists:
             return temp_file.read()
@@ -101,6 +101,11 @@ class WWW:
         driver.quit()
         return content
 
+    def read(self, with_selenium=False) -> str:
+        return (
+            self.read_with_selenium() if with_selenium else self.read_static()
+        )
+
     def download_binary(self, file_path) -> str:
         CHUNK_SIZE = 1024
         response = self.get_response()
@@ -110,5 +115,7 @@ class WWW:
         return file_path
 
     @property
-    def soup(self):
-        return BeautifulSoup(self.read(), "html.parser")
+    def soup(self, with_selenium=False):
+        return BeautifulSoup(
+            self.read(with_selenium=with_selenium), "html.parser"
+        )
