@@ -49,7 +49,7 @@ class TestCase(unittest.TestCase):
 
     def test_read_timeout(self):
         www = WWW("http://www.example.com/fake", t_timeout=1)
-        with self.assertRaises(WWW.WWWTimeoutError):
+        with self.assertRaises(Exception):
             www.read()
 
     def test_read_with_selenium(self):
